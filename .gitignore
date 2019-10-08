@@ -11,8 +11,6 @@ __pycache__/
 
 #database file
 
-*.sqlite3
-
 # C extensions
 
 *.so
