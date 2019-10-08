@@ -1,0 +1,67 @@
+{% extends 'admin/login.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block extrastyle %}
+
+   <style>
+        #header {
+        background-color: #fff !important;
+        }
+        body.login .submit-row input[type='submit'] {
+          background-color: #000 !important;
+          color: white;
+        }
+        body.login .form-row input:not([type='hidden']):not(:focus){
+          border-color: #000;
+        }
+        .form-control:focus{
+          border-color: #000;
+        }
+        h3, .h3 {
+          color: black ;
+        }
+        body.login .form-row input:not([type='hidden']):not(:focus) {
+          border-color:#035A7B;
+          background: white;
+        }
+        body {
+          /* -moz-appearance-mix-blend-mode: none; */
+          background-image: url("{% static '/images/fondo.jpg' %}");
+          background-size: cover;
+          background-repeat: no-repeat;
+          background-position: bottom;
+          background-color: rgba(0, 0, 0, 0.73);
+      }
+      .login #container {
+        border-radius: 5px;
+      }
+      .footer > .container-fluid {
+        padding-top: 0px;
+        padding-bottom: 0px;
+      }
+      body.login .suit-login-graphic {
+        margin: 1rem auto .1rem;
+      }
+    </style>
+{% endblock %}
+
+{% block branding %}
+<div class="">
+  <div class="suit-login-graphic">
+      <img style="width: 120px"  class="logo-menu" src="{% static '/images/secbi-black.png'%}" alt="logo">
+  </div>
+
+</div>
+
+    <h3>Ingresar</h3>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+      if (navigator.userAgent.search("Chrome") >= 0) {
+         $('body').css('background-blend-mode', 'color');
+       }
+    </script>
+
+
+{% endblock %}

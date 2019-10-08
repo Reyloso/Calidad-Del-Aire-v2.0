@@ -1,0 +1,781 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% block contenido %}
+ <!-- Animated -->
+ <style>
+    .fixed_headers {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .fixed_headers thead tr {
+      display: block;
+      position: relative;
+    }
+    .fixed_headers tbody {
+      display: block;
+      overflow: auto;
+      width: 100%;
+      height: 300px;
+    }
+    .fixed_headers td
+    .fixed_headers th {
+      min-width: 100%;
+    }
+    .fixed_headers tbody tr:nth-child(even) {
+      background-color: #eee;
+    }
+    .container{
+  padding: 1rem;
+  margin: 1rem;
+}
+
+.table-scroll{
+  /*width:100%; */
+  display: block;
+  empty-cells: show;
+  
+  /* Decoration */
+  border-spacing: 0;
+  border: 1px solid #bebebe;
+}
+
+.table-scroll thead{
+  background-color: #ffffff;;  
+  position:relative;
+  display: block;
+  width:100%;
+  overflow-y: scroll;
+}
+
+.table-scroll tbody{
+  /* Position */
+  display: block; position:relative;
+  width:100%; overflow-y:scroll;
+  /* Decoration */
+  border-top: 1px solid rgba(0,0,0,0.2);
+}
+
+.table-scroll tr{
+  width: 100%;
+  display:flex;
+}
+
+.table-scroll td,.table-scroll th{
+  flex-basis:100%;
+  flex-grow:2;
+  display: block;
+  padding: 1rem;
+  text-align:left;
+}
+
+/* Other options */
+
+.table-scroll.small-first-col td:first-child,
+.table-scroll.small-first-col th:first-child{
+  flex-basis:20%;
+  flex-grow:1;
+}
+
+.table-scroll tbody tr:nth-child(2n){
+  background-color: rgba(130,130,170,0.1);
+}
+
+.body-half-screen{
+  max-height: 50vh;
+}
+
+.small-col{flex-basis:10%;}
+
+  </style>
+ <div class="animated fadeIn" id="app">
+    <!-- Widgets  -->
+    <div class="row">
+        <div class="col-lg-3 col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="stat-widget-five">
+                        <div class="stat-icon dib flat-color-1">
+                            <img style="max-width: 2rem;" src="{% static '/images/temp.png'%}">
+                        </div>
+                        <div class="stat-content">
+                            <div class="text-left dib">
+                                <div class="stat-text"><span class=""> ${medicion.temperatura} °C</span></div>
+                                <div class="stat-heading">Temperatura</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="stat-widget-five">
+                        <div class="stat-icon dib flat-color-2">
+                            <img style="max-width: 3rem;" src="{% static '/images/humidity.png'%}">
+                        </div>
+                        <div class="stat-content">
+                            <div class="text-left dib">
+                                <div class="stat-text"><span class=""> ${medicion.humedad} %</span></div>
+                                <div class="stat-heading">Humedad</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="stat-widget-five">
+                        <div class="stat-icon dib flat-color-3">
+                            <img style="max-width: 3rem;" src="{% static '/images/gas.png'%}">
+                        </div>
+                        <div class="stat-content">
+                            <div class="text-left dib">
+                                <div class="stat-text"><span class=""> ${medicion.gas} PPM</span></div>
+                                <div class="stat-heading">Gas</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="stat-widget-five">
+                        <div class="stat-icon dib flat-color-4">
+                            <img style="max-width: 3rem;" src="{% static '/images/polvo.png'%}">
+                        </div>
+                        <div class="stat-content">
+                            <div class="text-left dib">
+                                <div class="stat-text"><span class=""> ${medicion.concentracion} PPM</span></div>
+                                <div class="stat-heading">Concentración</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Widgets -->
+    <!--  Traffic  -->
+    
+    <!--  /Traffic -->
+    <div class="clearfix"></div>
+    <!-- Orders -->
+    <div class="orders">
+        <div class="row">
+            <div class="col-xl-8">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="box-title">Mediciones </h4>
+                        <div class="container">
+                                    <!-- <h1>CSS only scrollable table body</h1>
+                                    <p>by PDG</p> -->
+                                  <table class="table-scroll small-first-col">
+                                    <thead>
+                                      <tr>
+                                      <th>ID</th>
+                                      <th>Temperatura</th>
+                                      <th>Humedad</th>
+                                      <th>Gas</th>
+                                      <th>Concentración</th>
+                                      <th>Fecha</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody class="body-half-screen">
+                                      <tr  v-for="m in mediciones_list">
+                                            <td >${ m.id }</td>
+                                            <td >${ m.temperatura } C°</td>
+                                            <td >${ m.humedad } %</td>
+                                            <td> ${ m.gas } PPM</td>
+                                            <td> ${ m.concentracion } PPM </td>
+                                            <td> ${ m.fecha } </td>
+                                        </tr>
+                                    </tbody>
+                                  </table>
+                                  </div>
+                    </div>
+                   
+                </div> <!-- /.card -->
+            </div>  <!-- /.col-lg-8 -->
+
+            <div class="col-md-4">
+                <section class="card">
+                    
+                    <div class="twt-feed blue-bg" style="background: #000000;">
+                        <div class="corner-ribon black-ribon">
+                            <i class="fa fa-rocket"></i>
+                        </div>
+                        <div class="fa fa-rocket wtt-mark" ></div>
+
+                        <div class="media">
+                            <a href="#">
+                                <img class="align-self-center rounded-circle mr-3" style="width:85px; height:85px;" alt="" src="images/admin.jpg">
+                            </a>
+                            <div class="media-body">
+                                <h2 class="text-white display-6"> ${mision.nombre}</h2>
+                                <p class="text-light"> ${mision.comandante}</p>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                    <div class="weather-category twt-category">
+                        <ul>
+                            <li class="active">
+                                <h5>Fecha</h5>
+                                ${mision.fecha}
+                            </li>
+                            <li>
+                                <h5>Estado</h5>
+                                ${mision.estado}
+                            </li>
+                            <li>
+                                <h5>Hora</h5>
+                                ${mision.hora}
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="twt-write col-sm-12">
+                            <button type="button" v-on:click="changestatus()" class="btn btn-secondary">${mision.estado}</button>
+                    </div>
+                    <footer class="twt-footer">
+                        <!-- <a href="#"><i class="fa fa-camera"></i></a>
+                        <a href="#"><i class="fa fa-map-marker"></i></a>
+                        New Castle, UK
+                        <span class="pull-right">
+                            32
+                        </span> -->
+                    </footer>
+                </section>
+            </div>
+        </div>
+    </div>
+    <!-- /.orders -->
+    <div class="row">
+            <!-- graficas -->
+            <!-- <div class='col-md-6'>
+              <div id="graficaGeigerCpm" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+            </div> -->
+              <br>
+            <!-- <div class='col-md-6'>
+              <div id="graficaGeigerSvo" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+            </div> -->
+              <br>
+            <div class='col-md-6'>
+              <div id="graficaTemperatura" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+            </div>
+              <br>
+            <div class='col-md-6'>
+              <div id="graficaHumedad" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+            </div>
+              <br>
+            <div class='col-md-6'>
+              <div id="graficaGas" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+            </div>
+              <br>
+            <div class='col-md-6'>
+              <div id="graficaCon" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+            </div>
+            <!-- <div class='col-md-6'>
+              <div id="graficaalt" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+            </div>
+              <br>  -->
+            
+    </div>
+           <!-- <div class="row">
+                <div class="col-md-12 col-lg-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div id="graficaTemperatura" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6">
+                    <div class="card ov-h">
+                        <div class="card-body bg-flat-color-2">
+                            <div id="flotBarChart" class="float-chart ml-4 mr-4" style="padding: 0px; position: relative;"><canvas class="flot-base" width="356" height="187" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 285px; height: 150px;"></canvas><canvas class="flot-overlay" width="356" height="187" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 285px; height: 150px;"></canvas></div>
+                        </div>
+                        <div id="cellPaiChart" class="float-chart" style="padding: 0px; position: relative;"><canvas class="flot-base" width="466" height="200" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 373px; height: 160px;"></canvas><canvas class="flot-overlay" width="466" height="200" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 373px; height: 160px;"></canvas><span class="pieLabel" id="pieLabel0" style="position: absolute; top: 90px; left: 218.5px;"><div style="font-size:x-small;text-align:center;padding:2px;color:#5b83de;">Direct Sell<br>65%</div></span><span class="pieLabel" id="pieLabel1" style="position: absolute; top: 18px; left: 68px;"><div style="font-size:x-small;text-align:center;padding:2px;color:#00bfa5;">Channel Sell<br>35%</div></span></div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="card weather-box">
+                        <h4 class="weather-title box-title">Weather</h4>
+                        <div class="card-body">
+                            <div class="weather-widget">
+                                <div id="weather-one" class="weather-one"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+ 
+    <!-- Modal - Calendar - Add New Event -->
+    <div class="modal fade none-border" id="event-modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title"><strong>Add New Event</strong></h4>
+                </div>
+                <div class="modal-body"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success save-event waves-effect waves-light">Create event</button>
+                    <button type="button" class="btn btn-danger delete-event waves-effect waves-light" data-dismiss="modal">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /#event-modal -->
+    
+</div>
+
+<!-- chart -->
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/series-label.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/data.js"></script>
+<!-- chart end -->
+
+<!-- .animated -->
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vuesax/dist/vuesax.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js" type="text/javascript"></script>
+
+
+
+<script>
+    new Vue({
+      el: '#app',
+      delimiters: ['${','}'],
+      data: {
+        token:"{{ csrf_token }}",
+        usuario:"{{user.username}}",
+        value:'',
+        inputform:true,
+        inputform2:false,
+        host_mqtt:'broker.hivemq.com',
+        port_mqtt:8000,
+        topic_mqtt:'calidad/cliente',
+        client:{},
+        medicion:{
+            temperatura:0,
+            humedad:0,
+            gas:0,
+            concentracion:0
+        },
+        mision: {
+            id:0,
+            nombre:"",
+            comandante:"",
+            fecha: "",
+            estado:"",
+            estadoBool:false
+        },
+        mediciones_list: [],
+        arraydatatemp: [],
+        arraydataHum: [],
+        arraydataGas: [],
+        arraydataCon: [],
+      },
+      created: function () {
+        this.loadData()
+        this.crearConexion()
+    },
+      methods: {
+        loadData(){
+            obj = this
+            axios.get('ultima-mision').then(function (response) {
+                var data =  response.data
+                mediciones = data.data.mediciones
+                ultima = mediciones[mediciones.length -1]
+                ultima = JSON.parse(ultima.data)
+                obj.medicion.temperatura = ultima.temperatura
+                obj.medicion.humedad = ultima.humedad
+                obj.medicion.gas = ultima.gas
+                obj.medicion.concentracion = ultima.concentracion
+                obj.mision.id = data.data.id
+                obj.mision.nombre = data.data.nombre
+                obj.mision.comandante = data.data.comandante.get_full_name
+                date = new Date (data.data.fecha_creacion)
+                obj.mision.fecha = date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear()
+                obj.mision.hora =  date.getHours()+ ":" + date.getMinutes()+ ":" + date.getSeconds()
+                obj.estadoBool = data.data.estado
+                console.log(data.data.estado)
+                if(data.data.estado==true){
+                    obj.mision.estado = "Activa"
+                }else{
+                    obj.mision.estado = "Inactiva"
+                }
+                console.log("hay")
+                console.log(obj.mision.estado)
+                    
+                for(key in mediciones){
+                    data = JSON.parse(mediciones[key].data)
+                    date = new Date (mediciones[key].fecha_creacion)
+                    obj.arraydatatemp.push(parseInt(data.temperatura))
+                    obj.arraydataHum.push(parseInt(data.humedad))
+                    obj.arraydataGas.push(parseInt(data.gas))
+                    obj.arraydataCon.push(parseInt(data.concentracion))
+                    obj.graficaTemp(obj.arraydatatemp)
+                    obj.graficaHum(obj.arraydataHum)
+                    obj.graficaGas(obj.arraydataGas)
+                    obj.graficaCon(obj.arraydataCon)
+                    row_medicion = {
+                        id : key,
+                        fecha: date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear() + "   " + date.getHours()+ ":" + date.getMinutes()+ ":" + date.getSeconds(),
+                        temperatura: data.temperatura,
+                        humedad : data.humedad,
+                        gas: data.gas,
+                        concentracion: data.concentracion
+                    }
+                    obj.mediciones_list.push(row_medicion)
+                }
+            }).catch(function (error) {
+                obj.$vs.notify({title:'Error',text:'Ha ocurrido un error cargando los recursos',color:'danger'})
+                console.log(error)
+            })
+        },
+        crearConexion() {
+            obj.$vs.notify({title:'Creando...',text:'Creando cliente de mqtt',color:'success'})
+            this.client = new Paho.MQTT.Client(this.host_mqtt, Number(this.port_mqtt), this.usuario)
+            // console.log(this.client)
+            obj.$vs.notify({title:'Creado...',text:'Cliente creado de forma exitosa',color:'success'})
+            this.client.onConnectionLost = this.onConnectionLost
+            this.client.onMessageArrived = this.onMessageArrived
+            obj.$vs.notify({title:'conectando...',text:'Conectando con el broker',color:'success'})
+            this.client.connect({ 
+                onSuccess: this.onConnect
+            })
+        },
+        onConnect() {
+            obj.$vs.notify({title:'conectado...',text:'cliente conectado al broker',color:'success'})
+            obj = this
+            obj.$vs.notify({title:'Topic...',text:'Conectando al topic de escucha',color:'success'})
+            // console.log(this.client)
+            obj.client.subscribe('calidad/cliente',{qos: 1})
+            obj.$vs.notify({title:'Conectado...',text:'Conectado al topic de escucha y recibiendo datos',color:'success'})
+        },
+        onConnectionLost(responseObject) {
+            if (responseObject.errorCode !== 0) {
+                console.log("onConnectionLost:" + responseObject.errorMessage)
+            }
+        },
+        onMessageArrived(message) {
+            console.log("onMessageArrived:" + message.payloadString)
+            data = JSON.parse(message.payloadString);
+            this.medicion.temperatura = data.Temperatura
+            this.medicion.humedad = data.Humedad
+            this.medicion.gas = data.Gas
+            this.medicion.concentracion = data.Concentracion
+            var date = new Date()
+            this.arraydatatemp.push(data.Temperatura)
+            this.arraydataHum.push(data.Humedad)
+            this.arraydataGas.push(data.Gas)
+            this.arraydataCon.push(data.Concentracion)
+            this.graficaTemp(this.arraydatatemp)
+            this.graficaHum(this.arraydataHum)
+            this.graficaGas(this.arraydataGas)
+            this.graficaCon(this.arraydataCon)
+            row_medicion = {
+                        id : (this.mediciones_list.length -1)+1,
+                        fecha: date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear() + "   " + date.getHours()+ ":" + date.getMinutes()+ ":" + date.getSeconds(),
+                        temperatura: data.Temperatura,
+                        humedad : data.Humedad,
+                        gas: data.Gas,
+                        concentracion: data.Concentracion
+            }
+            this.mediciones_list.push(row_medicion)
+            objeto = {"data": JSON.stringify(this.medicion)}
+            axios.post("mediciones",objeto, {headers: {"X-CSRFToken": obj.token}}).then(function (response) {
+                console.log("guardado")
+            }).catch(function (error) {
+                console.log(error)
+            });
+        },
+        changestatus(){
+            obj = this
+            var m = {}
+            // console.log(obj.mision.estadoBool)
+            if(obj.mision.estadoBool==true){
+                obj.mision.estadoBool=false
+                obj.mision.estado = "Inactiva"
+                m = {
+                    estado:false
+                }
+            }else{
+                obj.mision.estado = "Activa"
+                obj.mision.estadoBool=true
+                m = {
+                    estado:true
+                }
+            }
+            axios.patch("misiones/" + obj.mision.id, m, {headers: {"X-CSRFToken": obj.token,'Content-Type': 'application/json' }
+              }).then(function (response) {
+                console.log(response.data)
+              }).catch(function (error) {
+                console.log(error)
+              })
+        },
+        graficaTemp(data){
+            var date = data
+            var graficatem = Highcharts.chart('graficaTemperatura', {
+                chart: {
+                    type: 'spline',
+                    scrollablePlotArea: {
+                        minWidth: 600,
+                        scrollPositionX: 1
+                    }
+                },
+                title: {
+                    text: 'Temperatura'
+                },
+                subtitle: {
+                    text: 'Calidad Del Aire V 2.0'
+                },
+                xAxis: {
+                    type: 'datetime',
+                    labels: {
+                        overflow: 'justify'
+                    }
+                },
+                yAxis: {
+                    title: {
+                        text: '°C'
+                    },
+                    minorGridLineWidth: 0,
+                    gridLineWidth: 0,
+                    alternateGridColor: null,
+                    plotBands: []
+                },
+                tooltip: {
+                    valueSuffix: ' °C'
+                },
+                plotOptions: {
+                    spline: {
+                        lineWidth: 4,
+                        states: {
+                            hover: {
+                                lineWidth: 5
+                            }
+                        },
+                        marker: {
+                            enabled: false
+                        },
+                        pointInterval: 1000, // one hour
+                        pointStart: Date.UTC(2018, 1, 13, 0, 0, 0)
+                    }
+                },
+                series: [{
+                    name: 'Temperatura',
+                    data: date
+                }],
+                navigation: {
+                    menuItemStyle: {
+                        fontSize: '10px'
+                    }
+                }
+            });
+        },
+        graficaHum(data){
+            var date = data
+            var graficatem = Highcharts.chart('graficaHumedad', {
+                chart: {
+                    type: 'spline',
+                    scrollablePlotArea: {
+                        minWidth: 600,
+                        scrollPositionX: 1
+                    }
+                },
+                title: {
+                    text: 'Humedad'
+                },
+                subtitle: {
+                    text: 'Calidad Del Aire V 2.0'
+                },
+                xAxis: {
+                    type: 'datetime',
+                    labels: {
+                        overflow: 'justify'
+                    }
+                },
+                yAxis: {
+                    title: {
+                        text: '%'
+                    },
+                    minorGridLineWidth: 0,
+                    gridLineWidth: 0,
+                    alternateGridColor: null,
+                    plotBands: []
+                },
+                tooltip: {
+                    valueSuffix: ' %'
+                },
+                plotOptions: {
+                    spline: {
+                        lineWidth: 4,
+                        states: {
+                            hover: {
+                                lineWidth: 5
+                            }
+                        },
+                        marker: {
+                            enabled: false
+                        },
+                        pointInterval: 1000, // one hour
+                        pointStart: Date.UTC(2018, 1, 13, 0, 0, 0)
+                    }
+                },
+                series: [{
+                    name: 'Humedad',
+                    data: date
+                }],
+                navigation: {
+                    menuItemStyle: {
+                        fontSize: '10px'
+                    }
+                }
+            });
+        },
+        graficaGas(data){
+            var date = data
+            var graficatem = Highcharts.chart('graficaGas', {
+                chart: {
+                    type: 'spline',
+                    scrollablePlotArea: {
+                        minWidth: 600,
+                        scrollPositionX: 1
+                    }
+                },
+                title: {
+                    text: 'GAS'
+                },
+                subtitle: {
+                    text: 'Calidad Del Aire V 2.0'
+                },
+                xAxis: {
+                    type: 'datetime',
+                    labels: {
+                        overflow: 'justify'
+                    }
+                },
+                yAxis: {
+                    title: {
+                        text: 'PPM'
+                    },
+                    minorGridLineWidth: 0,
+                    gridLineWidth: 0,
+                    alternateGridColor: null,
+                    plotBands: []
+                },
+                tooltip: {
+                    valueSuffix: 'PPM'
+                },
+                plotOptions: {
+                    spline: {
+                        lineWidth: 4,
+                        states: {
+                            hover: {
+                                lineWidth: 5
+                            }
+                        },
+                        marker: {
+                            enabled: false
+                        },
+                        pointInterval: 1000, // one hour
+                        pointStart: Date.UTC(2018, 1, 13, 0, 0, 0)
+                    }
+                },
+                series: [{
+                    name: 'GAS',
+                    data: date
+                }],
+                navigation: {
+                    menuItemStyle: {
+                        fontSize: '10px'
+                    }
+                }
+            });
+        },
+        graficaCon(data){
+            var date = data
+            var graficatem = Highcharts.chart('graficaCon', {
+                chart: {
+                    type: 'spline',
+                    scrollablePlotArea: {
+                        minWidth: 600,
+                        scrollPositionX: 1
+                    }
+                },
+                title: {
+                    text: 'CONCENTRACIÓN'
+                },
+                subtitle: {
+                    text: 'Calidad Del Aire V 2.0'
+                },
+                xAxis: {
+                    type: 'datetime',
+                    labels: {
+                        overflow: 'justify'
+                    }
+                },
+                yAxis: {
+                    title: {
+                        text: 'PPM'
+                    },
+                    minorGridLineWidth: 0,
+                    gridLineWidth: 0,
+                    alternateGridColor: null,
+                    plotBands: []
+                },
+                tooltip: {
+                    valueSuffix: 'PPM'
+                },
+                plotOptions: {
+                    spline: {
+                        lineWidth: 4,
+                        states: {
+                            hover: {
+                                lineWidth: 5
+                            }
+                        },
+                        marker: {
+                            enabled: false
+                        },
+                        pointInterval: 1000, // one hour
+                        pointStart: Date.UTC(2018, 1, 13, 0, 0, 0)
+                    }
+                },
+                series: [{
+                    name: 'CONCENTRACIÓN',
+                    data: date
+                }],
+                navigation: {
+                    menuItemStyle: {
+                        fontSize: '10px'
+                    }
+                }
+            });
+        },
+
+      }
+    })
+  </script>
+  
+  </script>
+
+{% endblock %}
+
